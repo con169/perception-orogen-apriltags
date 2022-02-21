@@ -325,6 +325,10 @@ void Task::updateHook()
             if (rbs_vector.size() != 0)
             {
                 _marker_poses.write(rbs_vector);
+                MarkerPosesStamped marker_poses_stamped;
+                marker_poses_stamped.time = current_frame_ptr->time;
+                marker_poses_stamped.marker_poses = rbs_vector;
+                _marker_poses_stamped.write(marker_poses_stamped);
                 _single_marker_pose.write( rbs_vector[0] );
                 rbs_vector.clear();
             }

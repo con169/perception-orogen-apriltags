@@ -64,7 +64,8 @@ task_context "Task" do
     output_port("single_marker_pose", "base::samples::RigidBodyState")
 	.doc 'It contains a single calculated marker pose in respect to camera of a deteted visable marker'
     output_port("detected_corners", "apriltags/VisualFeaturePoints")
-     	.doc 'Writes the camera calibration to be acessible to other components' 	
+     	.doc 'Writes the camera calibration to be acessible to other components'
+    output_port("marker_poses_stamped", "apriltags/MarkerPosesStamped")
      	
     runtime_states :MARKER_DETECTED, :NO_MARKER_DETECTED
 

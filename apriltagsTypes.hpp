@@ -9,6 +9,7 @@
  */
 #include "base/Time.hpp"
 #include "base/Eigen.hpp"
+#include "base/samples/RigidBodyState.hpp"
 #include <vector>
 
 namespace apriltags {
@@ -62,6 +63,12 @@ namespace apriltags {
    {
        base::Time time;
        std::vector<VisualFeaturePoint> feature_points;
+   };
+
+   struct MarkerPosesStamped
+   {
+       base::Time time;
+       std::vector<base::samples::RigidBodyState> marker_poses;
    };
 }
 
