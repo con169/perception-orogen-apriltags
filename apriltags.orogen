@@ -1,0 +1,72 @@
+name "apriltags"
+version "0.1"
+
+using_library "apriltag"
+using_library "frame_helper"
+
+import_types_from "base"
+import_types_from "apriltagsTypes.hpp"
+import_types_from "frame_helper/Calibration.h"
+
+task_context "Task" do
+    needs_configuration
+
+    #Properties
+    property("conf_param", "apriltags/ApriltagsConfig")
+        .doc 'Configuration parameter for Apriltags detector
+              @param bool debug // Enable debugging output (slow)
+  		      @param bool quiet // Reduce output
+        	  @param family_t family // Tag family to use
+        	                         // TAG25H7, TAG25H9, TAG36H10, 
+        	                         // TAG36H11, TAG36ARTOOLKIT
+        	                         // are possible values.
+        	  @param int border // Set tag family border size
+              @param int iters // Repeat processing on input set this many times
+              @param int threads // Use this many CPU threads
+              @param double decimate // Decimate input image by this factor
+              @param double blur // Apply low-pass blur to input
+              @param bool refine_edges // Spend more time trying to align edges of tags
+              @param bool refine_decode // Spend more time trying to decode tags
+              @param bool refine_pose // Spend more time trying to precisely localize tags'
+    property("pose_calculation", "bool", true)
+        .doc 'If false, the marker is detected but the pose is not calculated'
+    property("camera_calibration", "frame_helper/CameraCalibration")
+        .doc 'Calibration parameters for the camera, which are used to undistort and are added as attributes to the frames'
+    property("marker_size", "double", -1)
+        .doc 'Value of the marker in meters'
+    property("apriltag_id_to_size", "/std/vector<apriltags/ApriltagIDToSize>").
+	doc("Mapping from Apriltag-ID to marker size. This could be used, if there are multiple marker with different sizes to be detected").
+	doc("This property is OPTIONAL. If not set, the marker_size-property is used")
+    property("draw_image", "bool", true)
+        .doc 'Write the image on the output_port'
+    property("draw_debug_image", "bool", false)
+        .doc 'Write the debug image (apriltag input grayscale image) on the output_port'
+    property("scale_image", "double", 1.0)
+        .doc 'applies this scaling to the image and calibration parameters'
+    property("stretch_contrast", "bool", false)
+        .doc 'performs a local constrat enhancement'
+    property("camera_frame", "/std/string")
+        .doc 'Frame name of the camera'
+     
+
+    #Input Ports
+    input_port("image", ro_ptr("/base/samples/frame/Frame"))
+        .doc 'Input image'
+
+    #Output Ports
+    #grayscale image 
+    output_port("debug_image", ro_ptr("/base/samples/frame/Frame"))
+    output_port("output_image", ro_ptr("/base/samples/frame/Frame"))
+        .doc 'Image that shows the detected markers'
+    output_port("marker_poses", "std/vector<base::samples::RigidBodyState>")
+        .doc 'It contains the calculated marker poses in respect to camera frame of all visible markers'
+    output_port("single_marker_pose", "base::samples::RigidBodyState")
+	.doc 'It contains a single calculated marker pose in respect to camera of a deteted visable marker'
+    output_port("detected_corners", "apriltags/VisualFeaturePoints")
+     	.doc 'Writes the camera calibration to be acessible to other components' 	
+     	
+    runtime_states :MARKER_DETECTED, :NO_MARKER_DETECTED
+
+    port_driven "image"
+end
+
