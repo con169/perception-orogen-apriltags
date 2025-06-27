@@ -4,6 +4,8 @@ This is a patched version of the `apriltag` library for compatibility with ROCK.
 # How to replace the default /perception/orogen/apriltags with this new fix
 ```
 cd ~/rock/perception/orogen/apriltags
+rm -rf ./*
+rm -rf ./.* 
 git clone https://github.com/con169/perception-orogen-apriltags.git .
 cd ~/rock
 amake
