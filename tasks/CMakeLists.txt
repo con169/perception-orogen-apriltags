@@ -1,6 +1,11 @@
 # Generated from orogen/lib/orogen/templates/tasks/CMakeLists.txt
-include_directories(/home/con/rock/install/include)
-include_directories(/home/con/rock/install/include/apriltag)
+
+# personal hard coded paths for first working iteration
+##include_directories(/home/con/rock/install/include)
+##include_directories(/home/con/rock/install/include/apriltag)
+
+include_directories($ENV{AUTOPROJ_CURRENT_ROOT}/install/include)
+include_directories($ENV{AUTOPROJ_CURRENT_ROOT}/install/include/apriltag)
 
 include(apriltagsTaskLib)
 ADD_LIBRARY(${APRILTAGS_TASKLIB_NAME} SHARED 
