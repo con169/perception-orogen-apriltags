@@ -13,6 +13,6 @@ amake
 - ROCK master 22.06
 - OpenCV 4.2
 - Orocos Toolchain
-- 
+
 ### Based on
 This repo originates from [perception-orogen-apriltags](https://github.com/rock-perception/perception-orogen-apriltags) from the rock perception repo
