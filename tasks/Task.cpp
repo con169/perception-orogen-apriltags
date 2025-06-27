@@ -254,7 +254,7 @@ void Task::updateHook()
                 corners.time = current_frame_ptr->time;
 
                 if (!conf.quiet)
-                    printf("detection %3d: id (%2dx%2d)-%-4d, hamming %d, goodness %8.3f, margin %8.3f\n",
+                    printf("detection %3d: id (%2dx%2d)-%-4d, hamming %d, margin %8.3f\n", //, goodness %8.3f
                             i, det->family->name,
                         det->id, det->hamming, det->decision_margin);
 
