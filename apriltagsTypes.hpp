@@ -14,7 +14,7 @@
 
 namespace apriltags {
 
-	enum family_t {TAG25H7, TAG25H9, TAG36H10, TAG36H11, TAG36ARTOOLKIT};
+	enum family_t {TAG16H5, TAG25H9, TAG36H10, TAG36H11};
 
     struct ApriltagsConfig
 	{

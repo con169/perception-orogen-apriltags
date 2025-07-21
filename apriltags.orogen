@@ -1,9 +1,9 @@
 name "apriltags"
 version "0.1"
 
-using_library "apriltags"
+using_library "apriltag"
 using_library "frame_helper"
-using_library "opencv"
+using_library "opencv4"
 
 import_types_from "base"
 import_types_from "apriltagsTypes.hpp"

@@ -18,9 +18,10 @@
 #include "apriltags/common/image_u8.h"
 #include "apriltags/tag36h11.h"
 #include "apriltags/tag36h10.h"
-#include "apriltags/tag36artoolkit.h"
+//#include "apriltags/tag36artoolkit.h"
 #include "apriltags/tag25h9.h"
-#include "apriltags/tag25h7.h"
+#include "apriltags/tag16h5.h"
+// #include "apriltags/tag25h7.h"
 
 #include "apriltags/common/zarray.h"
 #include "apriltags/common/getopt.h"
@@ -61,7 +62,7 @@ namespace apriltags {
 
         std::map<int, double> apriltag_id_to_size_; //Mapping from ID to size
 
-        void getRbs(base::samples::RigidBodyState &rbs, float markerSizeMeters, double points[][2], cv::Mat  camMatrix,cv::Mat distCoeff)throw(cv::Exception);
+        void getRbs(base::samples::RigidBodyState &rbs, float markerSizeMeters, double points[][2], cv::Mat  camMatrix,cv::Mat distCoeff);//throw(cv::Exception);
         void draw(cv::Mat &in, double p[][2], double c[], int id, cv::Scalar color, int lineWidth)const;
         void draw3dAxis(cv::Mat &Image, float marker_size, cv::Mat camera_matrix, cv::Mat dist_matrix);
         void draw3dCube(cv::Mat &Image,float marker_size,cv::Mat  camMatrix,cv::Mat distCoeff);

@@ -64,8 +64,8 @@ bool Task::configureHook()
     tf = NULL;
     switch (conf.family)
     {
-        case TAG25H7:
-            tf = tag25h7_create();
+        case TAG16H5:
+            tf = tag16h5_create();
             break;
         case TAG25H9:
             tf = tag25h9_create();
@@ -76,9 +76,9 @@ bool Task::configureHook()
         case TAG36H11:
             tf = tag36h11_create();
             break;
-        case TAG36ARTOOLKIT:
-            tf = tag36artoolkit_create();
-            break;
+        // case TAG36ARTOOLKIT:
+        //     tf = tag36artoolkit_create();
+        //     break;
         default:
             throw std::runtime_error("The desired apriltag family code is not implemented");
             break;
@@ -92,8 +92,8 @@ bool Task::configureHook()
     td->nthreads = conf.threads;
     td->debug = conf.debug;
     td->refine_edges = conf.refine_edges;
-    td->refine_decode = conf.refine_decode;
-    td->refine_pose = conf.refine_pose;
+    //td->refine_decode = conf.refine_decode;
+    //td->refine_pose = conf.refine_pose;
 
     std::vector<ApriltagIDToSize> apriltag_size_id = _apriltag_id_to_size.get();
     apriltag_id_to_size_.clear();
@@ -254,9 +254,8 @@ void Task::updateHook()
                 corners.time = current_frame_ptr->time;
 
                 if (!conf.quiet)
-                    printf("detection %3d: id (%2dx%2d)-%-4d, hamming %d, goodness %8.3f, margin %8.3f\n",
-                            i, det->family->d*det->family->d, det->family->h,
-                            det->id, det->hamming, det->goodness, det->decision_margin);
+                    printf("detection %3d: id %-4d, hamming %d, margin %8.3f\n",
+                            i, det->id, det->hamming, det->decision_margin);
 
                 if (_draw_image.get())
                 {
@@ -356,8 +355,8 @@ void Task::cleanupHook()
 
     switch (conf.family)
     {
-        case TAG25H7:
-            tag25h7_destroy(tf);
+        case TAG16H5:
+            tag16h5_destroy(tf);
             break;
         case TAG25H9:
             tag25h9_destroy(tf);
@@ -368,9 +367,9 @@ void Task::cleanupHook()
         case TAG36H11:
             tag36h11_destroy(tf);
             break;
-        case TAG36ARTOOLKIT:
-            tag36artoolkit_destroy(tf);
-            break;
+        // case TAG36ARTOOLKIT:
+        //     tag36artoolkit_destroy(tf);
+        //     break;
         default:
             throw std::runtime_error("The desired apriltag family code is not implemented");
             break;
@@ -379,7 +378,7 @@ void Task::cleanupHook()
     TaskBase::cleanupHook();
 }
 
-void Task::getRbs(base::samples::RigidBodyState &rbs, float markerSizeMeters, double points[][2], cv::Mat  camMatrix,cv::Mat distCoeff)throw(cv::Exception)
+void Task::getRbs(base::samples::RigidBodyState &rbs, float markerSizeMeters, double points[][2], cv::Mat  camMatrix,cv::Mat distCoeff)//throw(cv::Exception)
 {
     if (markerSizeMeters<=0)throw cv::Exception(9004,"markerSize<=0: invalid markerSize","getRbs",__FILE__,__LINE__);
     if (camMatrix.rows==0 || camMatrix.cols==0) throw cv::Exception(9004,"CameraMatrix is empty","getRbs",__FILE__,__LINE__);
@@ -436,14 +435,14 @@ void Task::getRbs(base::samples::RigidBodyState &rbs, float markerSizeMeters, do
 
 void Task::draw(cv::Mat &in, double p[][2], double c[], int id, cv::Scalar color, int lineWidth)const
 {
-    cv::line( in,cv::Point(p[0][0], p[0][1]),cv::Point(p[1][0], p[1][1]),color,lineWidth,CV_AA);
-    cv::line( in,cv::Point(p[1][0], p[1][1]),cv::Point(p[2][0], p[2][1]),color,lineWidth,CV_AA);
-    cv::line( in,cv::Point(p[2][0], p[2][1]),cv::Point(p[3][0], p[3][1]),color,lineWidth,CV_AA);
-    cv::line( in,cv::Point(p[3][0], p[3][1]),cv::Point(p[0][0], p[0][1]),color,lineWidth,CV_AA);
+    cv::line( in,cv::Point(p[0][0], p[0][1]),cv::Point(p[1][0], p[1][1]),color,lineWidth,cv::LINE_AA);
+    cv::line( in,cv::Point(p[1][0], p[1][1]),cv::Point(p[2][0], p[2][1]),color,lineWidth,cv::LINE_AA);
+    cv::line( in,cv::Point(p[2][0], p[2][1]),cv::Point(p[3][0], p[3][1]),color,lineWidth,cv::LINE_AA);
+    cv::line( in,cv::Point(p[3][0], p[3][1]),cv::Point(p[0][0], p[0][1]),color,lineWidth,cv::LINE_AA);
 
-    cv::rectangle( in,cv::Point(p[0][0], p[0][1]) - cv::Point(2,2),cv::Point(p[0][0], p[0][1])+cv::Point(2,2),cv::Scalar(0,0,255,255),lineWidth,CV_AA);
-    cv::rectangle( in,cv::Point(p[1][0], p[1][1]) - cv::Point(2,2),cv::Point(p[1][0], p[1][1])+cv::Point(2,2),cv::Scalar(0,255,0,255),lineWidth,CV_AA);
-    cv::rectangle( in,cv::Point(p[2][0], p[2][1]) - cv::Point(2,2),cv::Point(p[2][0], p[2][1])+cv::Point(2,2),cv::Scalar(255,0,0,255),lineWidth,CV_AA);
+    cv::rectangle( in,cv::Point(p[0][0], p[0][1]) - cv::Point(2,2),cv::Point(p[0][0], p[0][1])+cv::Point(2,2),cv::Scalar(0,0,255,255),lineWidth,cv::LINE_AA);
+    cv::rectangle( in,cv::Point(p[1][0], p[1][1]) - cv::Point(2,2),cv::Point(p[1][0], p[1][1])+cv::Point(2,2),cv::Scalar(0,255,0,255),lineWidth,cv::LINE_AA);
+    cv::rectangle( in,cv::Point(p[2][0], p[2][1]) - cv::Point(2,2),cv::Point(p[2][0], p[2][1])+cv::Point(2,2),cv::Scalar(255,0,0,255),lineWidth,cv::LINE_AA);
 
 
     char cad[100];
@@ -497,13 +496,13 @@ void Task::draw3dCube(cv::Mat &Image,float marker_size,cv::Mat  camMatrix,cv::Ma
 
     //draw lines of different colours
     for (int i=0;i<4;i++)
-        cv::line(Image,imagePoints[i],imagePoints[(i+1)%4],cv::Scalar(0,0,255,255),1,CV_AA);
+        cv::line(Image,imagePoints[i],imagePoints[(i+1)%4],cv::Scalar(0,0,255,255),1,cv::LINE_AA);
 
     for (int i=0;i<4;i++)
-        cv::line(Image,imagePoints[i+4],imagePoints[4+(i+1)%4],cv::Scalar(0,0,255,255),1,CV_AA);
+        cv::line(Image,imagePoints[i+4],imagePoints[4+(i+1)%4],cv::Scalar(0,0,255,255),1,cv::LINE_AA);
 
     for (int i=0;i<4;i++)
-        cv::line(Image,imagePoints[i],imagePoints[i+4],cv::Scalar(0,0,255,255),1,CV_AA);
+        cv::line(Image,imagePoints[i],imagePoints[i+4],cv::Scalar(0,0,255,255),1,cv::LINE_AA);
 
 
 }
@@ -530,9 +529,9 @@ void Task::draw3dAxis(cv::Mat &Image, float marker_size, cv::Mat camera_matrix, 
     cv::projectPoints( objectPoints, rvec, tvec, camera_matrix, dist_matrix, imagePoints);
     //draw lines of different colours
 
-    cv::line(Image,imagePoints[0],imagePoints[1],cv::Scalar(0,0,255,255),1,CV_AA);
-    cv::line(Image,imagePoints[0],imagePoints[2],cv::Scalar(0,255,0,255),1,CV_AA);
-    cv::line(Image,imagePoints[0],imagePoints[3],cv::Scalar(255,0,0,255),1,CV_AA);
+    cv::line(Image,imagePoints[0],imagePoints[1],cv::Scalar(0,0,255,255),1,cv::LINE_AA);
+    cv::line(Image,imagePoints[0],imagePoints[2],cv::Scalar(0,255,0,255),1,cv::LINE_AA);
+    cv::line(Image,imagePoints[0],imagePoints[3],cv::Scalar(255,0,0,255),1,cv::LINE_AA);
     cv::putText(Image,"x", imagePoints[1],cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0,0,255,255),2);
     cv::putText(Image,"y", imagePoints[2],cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0,255,0,255),2);
     cv::putText(Image,"z", imagePoints[3],cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(255,0,0,255),2);
